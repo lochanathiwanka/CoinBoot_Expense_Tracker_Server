@@ -26,6 +26,11 @@ app.use(function (err, req, res, next) {
     res.status(422).send({error: err.message});
 });
 
+//check if user is in the system & get user details
+app.get('', function (req, res, next) {
+    res.status(200).send('Welcome back to the server!');
+});
+
 app.listen(process.env.port || 3000, function () {
     console.log('Server is starting...');
 });
