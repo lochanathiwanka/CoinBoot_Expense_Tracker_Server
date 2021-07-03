@@ -31,6 +31,6 @@ app.get('', function (req, res, next) {
     res.status(200).send('Welcome back to the server!');
 });
 
-app.listen(process.env.port || 3000, function () {
+app.listen(process.env.PORT || 3000, function () {
     console.log('Server is starting...');
 });
