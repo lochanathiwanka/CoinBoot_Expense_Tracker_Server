@@ -7,7 +7,7 @@ const routes = require('./routes/api');
 const app = express();
 
 //connect to mongodb
-mongoose.connect('mongodb://localhost/lochana')
+mongoose.connect('mongodb+srv://root:1234@cluster0.8iqih.mongodb.net/lochana')
     .then(function () {
         console.log('Connected to the database!');
     })

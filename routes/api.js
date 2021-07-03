@@ -4,13 +4,115 @@ const User = require('../models/user');
 const Income = require('../models/income');
 const Expense = require('../models/expense');
 
-//get users
-router.get("/user", function (req, res, next) {
-    res.send('Hello Client!');
+//check if user is in the system & get user details
+router.get('/user', function (req, res, next) {
+    User.findOne({
+        user_name: req.body.user_name,
+        password: req.body.password
+    }).then(function (user) {
+        //check if user is exist or not
+        if (user !== null) {
+            res.status(200).send(user);
+        } else {
+            res.status(404).send({error: 'User not found!'});
+        }
+    }).catch(next);
+});
+
+//get user's income details of a specific month & year
+router.get('/user/income', function (req, res, next) {
+    Income.findOne({
+        'user.user_name': req.body.user_name
+    }).then(function (details) {
+        if (details !== null) {
+            //check income details with correspond month & year
+            for (let i = 0; i < details.user[0].details.length; i++) {
+                if (details.user[0].details[i].month === req.body.month && details.user[0].details[i].year === req.body.year) {
+                    res.status(200).send(details.user[0].details[i]);
+                    return;
+                }
+            }
+
+            res.status(404).send({error: 'There is no any matching details with the correspond month & year'});
+        } else {
+            res.status(404).send({error: 'User income details not found!'});
+        }
+    }).catch(next);
+});
+
+//get user's all income details for a particular year
+router.get('/user/income/all', function (req, res, next) {
+    Income.findOne({
+        'user.user_name': req.body.user_name
+    }).then(function (details) {
+        if (details !== null) {
+            //check income details with correspond year & add to income_details list
+            const income_details = [];
+            for (let i = 0; i < details.user[0].details.length; i++) {
+                if (details.user[0].details[i].year === req.body.year) {
+                    income_details.push(details.user[0].details[i]);
+                }
+            }
+
+            if (income_details.length) {
+                res.status(200).send(income_details);
+            } else {
+                res.status(404).send({error: 'There is no any matching details with the correspond year'});
+            }
+        } else {
+            res.status(404).send({error: 'User income details not found!'});
+        }
+    }).catch(next);
+});
+
+//get user's expense details of a specific month & year
+router.get('/user/expense', function (req, res, next) {
+    Expense.findOne({
+        'user.user_name': req.body.user_name
+    }).then(function (details) {
+        if (details !== null) {
+            //check expense details with correspond month & year
+            for (let i = 0; i < details.user[0].details.length; i++) {
+                if (details.user[0].details[i].month === req.body.month && details.user[0].details[i].year === req.body.year) {
+                    res.status(200).send(details.user[0].details[i]);
+                    return;
+                }
+            }
+
+            res.status(404).send({error: 'There is no any matching details with the correspond month & year'});
+        } else {
+            res.status(404).send({error: 'User expense details not found!'});
+        }
+    }).catch(next);
+});
+
+//get user's all expense details for a particular year
+router.get('/user/expense/all', function (req, res, next) {
+    Expense.findOne({
+        'user.user_name': req.body.user_name
+    }).then(function (details) {
+        if (details !== null) {
+            //check expense details with correspond year & add to expense_details list
+            const expense_details = [];
+            for (let i = 0; i < details.user[0].details.length; i++) {
+                if (details.user[0].details[i].year === req.body.year) {
+                    expense_details.push(details.user[0].details[i]);
+                }
+            }
+
+            if (expense_details.length) {
+                res.status(200).send(expense_details);
+            } else {
+                res.status(404).send({error: 'There is no any matching details with the correspond year'});
+            }
+        } else {
+            res.status(404).send({error: 'User expense details not found!'});
+        }
+    }).catch(next);
 });
 
 //add user
-router.post("/user", function (req, res, next) {
+router.post('/user', function (req, res, next) {
     User.create(req.body)
         .then(function () {
             res.status(200).send('User saved!');
@@ -19,7 +121,7 @@ router.post("/user", function (req, res, next) {
 });
 
 //add new income details
-router.post("/user/income", function (req, res, next) {
+router.post('/user/income', function (req, res, next) {
     Income.findOne({"user.user_name": req.body.user_name})
         .then(function (value) {
             //check if user's first income details is not added yet
@@ -63,17 +165,17 @@ router.post("/user/income", function (req, res, next) {
 });
 
 //update user income details
-router.put("/user/income", function (req, res, next) {
+router.put('/user/income', function (req, res, next) {
     Income.findOne({
         "user.user_name": req.body.user_name,
     }).then(function (value) {
-            if (value !== null) {
-                for (let i = 0; i < value.user[0].details.length; i++) {
-                    //get income details by correspond month & year of the particular user
-                    if (
-                        value.user[0].details[i].month.toLowerCase() === req.body.month.toLowerCase() &&
-                        value.user[0].details[i].year === req.body.year
-                    ) {
+        if (value !== null) {
+            for (let i = 0; i < value.user[0].details.length; i++) {
+                //get income details by correspond month & year of the particular user
+                if (
+                    value.user[0].details[i].month.toLowerCase() === req.body.month.toLowerCase() &&
+                    value.user[0].details[i].year === req.body.year
+                ) {
                         //check the source to update
                         switch (req.body.source) {
                             case 'salary':
@@ -105,7 +207,7 @@ router.put("/user/income", function (req, res, next) {
 });
 
 //add new expense details
-router.post("/user/expense", function (req, res, next) {
+router.post('/user/expense', function (req, res, next) {
     Expense.findOne({"user.user_name": req.body.user_name})
         .then(function (value) {
 
@@ -163,7 +265,7 @@ router.post("/user/expense", function (req, res, next) {
 });
 
 //update user expense details
-router.put("/user/expense", function (req, res, next) {
+router.put('/user/expense', function (req, res, next) {
     Expense.findOne({
         "user.user_name": req.body.user_name,
     }).then(function (value) {
