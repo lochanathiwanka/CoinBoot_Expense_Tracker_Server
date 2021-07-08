@@ -20,10 +20,23 @@ router.get('/user', function (req, res, next) {
     }).catch(next);
 });
 
+//get user's details by user_name
+router.get('/user/details', function (req, res, next) {
+    Income.findOne({
+        'user.user_name': req.query.user_name
+    }).then(function (details) {
+        if (details !== null) {
+            res.status(200).send(details);
+        } else {
+            res.status(404).send(null);
+        }
+    }).catch(next);
+});
+
 //get user's income details of a specific month & year
 router.get('/user/income', function (req, res, next) {
     Income.findOne({
-        'user.user_name': req.body.user_name
+        'user.user_name': req.query.user_name
     }).then(function (details) {
         if (details !== null) {
             //check income details with correspond month & year
