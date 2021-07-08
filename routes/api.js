@@ -86,12 +86,12 @@ router.get('/user/income/all', function (req, res, next) {
 //get user's expense details of a specific month & year
 router.get('/user/expense', function (req, res, next) {
     Expense.findOne({
-        'user.user_name': req.body.user_name
+        'user.user_name': req.query.user_name
     }).then(function (details) {
         if (details !== null) {
             //check expense details with correspond month & year
             for (let i = 0; i < details.user[0].details.length; i++) {
-                if (details.user[0].details[i].month === req.body.month && details.user[0].details[i].year === req.body.year) {
+                if (details.user[0].details[i].month === req.query.month && details.user[0].details[i].year === req.query.year) {
                     res.status(200).send(details.user[0].details[i]);
                     return;
                 }
