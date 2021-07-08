@@ -22,8 +22,8 @@ router.get('/user', function (req, res, next) {
 
 //get user's details by user_name
 router.get('/user/details', function (req, res, next) {
-    Income.findOne({
-        'user.user_name': req.query.user_name
+    User.findOne({
+        'user_name': req.query.user_name
     }).then(function (details) {
         if (details !== null) {
             res.status(200).send(details);
