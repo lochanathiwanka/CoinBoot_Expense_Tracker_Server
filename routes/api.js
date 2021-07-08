@@ -14,7 +14,7 @@ router.get('/user', function (req, res, next) {
         if (user !== null) {
             res.status(200).send(user);
         } else {
-            throw new Error();
+            throw new Error(null);
             /*res.status(404).send({error: 'User not found!'});*/
         }
     }).catch(next);
