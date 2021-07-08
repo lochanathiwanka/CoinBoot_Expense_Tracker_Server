@@ -7,8 +7,8 @@ const Expense = require('../models/expense');
 //check if user is in the system & get user details
 router.get('/user', function (req, res, next) {
     User.findOne({
-        user_name: req.body.user_name,
-        password: req.body.password
+        user_name: req.query.user_name,
+        password: req.query.password
     }).then(function (user) {
         //check if user is exist or not
         if (user !== null) {
