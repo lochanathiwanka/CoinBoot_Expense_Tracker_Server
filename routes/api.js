@@ -47,9 +47,11 @@ router.get('/user/income', function (req, res, next) {
                 }
             }
 
-            res.status(404).send({error: 'There is no any matching details with the correspond month & year'});
+            /*res.status(404).send({error: 'There is no any matching details with the correspond month & year'});*/
+            res.status(404).send(null);
         } else {
-            res.status(404).send({error: 'User income details not found!'});
+            /*res.status(404).send({error: 'User income details not found!'});*/
+            res.status(404).send(null);
         }
     }).catch(next);
 });
@@ -71,10 +73,12 @@ router.get('/user/income/all', function (req, res, next) {
             if (income_details.length) {
                 res.status(200).send(income_details);
             } else {
-                res.status(404).send({error: 'There is no any matching details with the correspond year'});
+                /*res.status(404).send({error: 'There is no any matching details with the correspond year'});*/
+                res.status(404).send(null);
             }
         } else {
-            res.status(404).send({error: 'User income details not found!'});
+            /*res.status(404).send({error: 'User income details not found!'});*/
+            res.status(404).send(null);
         }
     }).catch(next);
 });
@@ -93,9 +97,11 @@ router.get('/user/expense', function (req, res, next) {
                 }
             }
 
-            res.status(404).send({error: 'There is no any matching details with the correspond month & year'});
+            /*res.status(404).send({error: 'There is no any matching details with the correspond month & year'});*/
+            res.status(404).send(null);
         } else {
-            res.status(404).send({error: 'User expense details not found!'});
+            /*res.status(404).send({error: 'User expense details not found!'});*/
+            res.status(404).send(null);
         }
     }).catch(next);
 });
@@ -117,10 +123,12 @@ router.get('/user/expense/all', function (req, res, next) {
             if (expense_details.length) {
                 res.status(200).send(expense_details);
             } else {
-                res.status(404).send({error: 'There is no any matching details with the correspond year'});
+                /*res.status(404).send({error: 'There is no any matching details with the correspond year'});*/
+                res.status(404).send(null);
             }
         } else {
-            res.status(404).send({error: 'User expense details not found!'});
+            /*res.status(404).send({error: 'User expense details not found!'});*/
+            res.status(404).send(null);
         }
     }).catch(next);
 });
@@ -150,7 +158,7 @@ router.post('/user/income', function (req, res, next) {
                     if (
                         value.user[0].details[i].month.toLowerCase() === req.body.month.toLowerCase() &&
                         value.user[0].details[i].year === req.body.year
-                    ){
+                    ) {
                         //add new income details to the existing user & current month
                         value.user[0].details[i].salary += req.body.details[0].user[0].details[0].salary;
                         value.user[0].details[i].interest += req.body.details[0].user[0].details[0].interest;
@@ -190,33 +198,36 @@ router.put('/user/income', function (req, res, next) {
                     value.user[0].details[i].month.toLowerCase() === req.body.month.toLowerCase() &&
                     value.user[0].details[i].year === req.body.year
                 ) {
-                        //check the source to update
-                        switch (req.body.source) {
-                            case 'salary':
-                                value.user[0].details[i].salary = req.body.salary;
-                                break;
-                            case 'interest':
-                                value.user[0].details[i].interest = req.body.interest;
-                                break;
-                            case 'other':
-                                value.user[0].details[i].other = req.body.other;
-                                break;
-                            default:
-                                res.status(404).send({error: 'Source not found..check again!'});
-                                return;
-                        }
-
-                        value.save().then(function () {
-                            res.status(200).send('Income details updated!');
-                        }).catch(next);
-                        return;
+                    //check the source to update
+                    switch (req.body.source) {
+                        case 'salary':
+                            value.user[0].details[i].salary = req.body.salary;
+                            break;
+                        case 'interest':
+                            value.user[0].details[i].interest = req.body.interest;
+                            break;
+                        case 'other':
+                            value.user[0].details[i].other = req.body.other;
+                            break;
+                        default:
+                            /*res.status(404).send({error: 'Source not found..check again!'});*/
+                            res.status(404).send(null);
+                            return;
                     }
+
+                    value.save().then(function () {
+                        res.status(200).send('Income details updated!');
+                    }).catch(next);
+                    return;
                 }
-                res.status(404).send({error: 'Correspond month or year not found..check again!'});
-            } else {
-                res.status(404).send({error: 'Could not find any details to the correspond user!'});
             }
-        })
+            /*res.status(404).send({error: 'Correspond month or year not found..check again!'});*/
+            res.status(404).send(null);
+        } else {
+            /*res.status(404).send({error: 'Could not find any details to the correspond user!'});*/
+            res.status(404).send(null);
+        }
+    })
         .catch(next);
 });
 
@@ -237,7 +248,7 @@ router.post('/user/expense', function (req, res, next) {
                     if (
                         value.user[0].details[i].month.toLowerCase() === req.body.month.toLowerCase() &&
                         value.user[0].details[i].year === req.body.year
-                    ){
+                    ) {
                         //add new expense details to the existing user & current month
                         value.user[0].details[i].food += req.body.details[0].user[0].details[0].food;
                         value.user[0].details[i].transport += req.body.details[0].user[0].details[0].transport;
@@ -320,7 +331,8 @@ router.put('/user/expense', function (req, res, next) {
                             value.user[0].details[i].other = req.body.other;
                             break;
                         default:
-                            res.status(404).send({error: 'Source not found..check again!'});
+                            /*res.status(404).send({error: 'Source not found..check again!'});*/
+                            res.status(404).send(null);
                             return;
                     }
 
@@ -330,9 +342,11 @@ router.put('/user/expense', function (req, res, next) {
                     return;
                 }
             }
-            res.status(404).send({error: 'Correspond month or year not found..check again!'});
+            /*res.status(404).send({error: 'Correspond month or year not found..check again!'});*/
+            res.status(404).send(null);
         } else {
-            res.status(404).send({error: 'Could not find any details to the correspond user!'});
+            /*res.status(404).send({error: 'Could not find any details to the correspond user!'});*/
+            res.status(404).send(null);
         }
     })
         .catch(next);
